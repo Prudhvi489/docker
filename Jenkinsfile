@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     def imageName = "prudhvisai489/jenkinstest"
-                    docker.build(imageName)
+                    docker build -t (imageName)
                 }
             }
         }

@@ -34,8 +34,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def imageName = "prudhvisai489/jenkinstest"
-                    docker build -t (imageName)
+                    // def imageName = "prudhvisai489/jenkinstest"
+                    docker build -t prudhvisai489/jenkinstest .
                 }
             }
         }
