@@ -35,8 +35,8 @@ pipeline {
             steps {
                 script {
                     def imageName = "prudhvisai489/jenkinstest"
-                     def dockerfilePath = "./hellodocker/Dockerfile"
-                    sh "docker build -t $imageName"
+                     def dockerfilePath = "hellodocker/Dockerfile"
+                    sh "docker build -t $imageName $dockerfilePath"
                 }
             }
         }
