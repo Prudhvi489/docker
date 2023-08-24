@@ -1,41 +1,30 @@
 pipeline {
     agent any
-
+    
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dckr_pat_GIdPbMxSJerY1RDpMAyLYOokIJM')
-        IMAGE_NAME = 'prudhvisai489/jenkinstest'
-        DOCKERFILE_PATH = 'hellodocker/Dockerfile' // Adjust the path to your Dockerfile
+        DOCKER_HUB_CREDENTIALS = credentials('jenkins_dockerhub')
+        IMAGE_NAME = 'prudhvisai489/first_jenkins'
+        TAG = 'latest'
     }
-
+    
     stages {
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
                 script {
-                    def dockerImage = docker.build("${IMAGE_NAME}", "-f ${DOCKERFILE_PATH} .")
-
-                    // Tag the image with the final name
-                    dockerImage.tag("${IMAGE_NAME}:latest")
+                    sh 'docker build -t $IMAGE_NAME:$TAG .'
                 }
             }
         }
-
-        stage('Push to Docker Hub') {
+        
+        stage('Push') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
-                        dockerImage.push()
+                    withCredentials([string(credentialsId: 'DOCKER_HUB_CREDENTIALS', variable: 'DOCKER_HUB_CREDENTIALS')]) {
+                        sh "docker login -u prudhvisai489 -p $DOCKER_HUB_CREDENTIALS"
+                        sh "docker push $IMAGE_NAME:$TAG"
                     }
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Image successfully built and pushed to Docker Hub"
-        }
-        failure {
-            echo "Image build or push failed"
         }
     }
 }
